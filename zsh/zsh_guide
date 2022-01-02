@@ -1,0 +1,136 @@
+#-------------------------------
+# ZSH Guide
+#-------------------------------
+
+# Startup Files
+/etc/zshenv
+~/.zshenv
+/etc/zprofile
+~/.zprofile
+/etc/zshrc
+~/.zshrc
+/etc/zlogin
+~/.zlogin
+~/.zlogout
+/etc/zlogout
+
+# Login vs Interactive
+[[ -o login ]]
+[[ -o interactive ]]
+
+# ZSH Debuggin
+zsh -x filename             # prints process line by line
+type <cmd>                  # will tell where that cmd comes from
+
+zmodload zsh/zprof          # put at the start of .zshrc
+zprof                       # put at the end, outputs time for all modules
+
+# Prompt - zshmisc
+PS1='%n@%M %d %%'           # user @ hostname /path %
+%[n]d                       # n specifies number of trailing components
+
+# Builtins
+zle -N widget [function]    # create a user defined widget
+zle -U 'string'             # insert into cli as if was typed by the user
+
+# Bindings
+bindkey -s 'str1' 'str2'    # bind 1 to 2
+bindkey 'str' <widget>      # builtin commands (man zshzle)
+
+# Command Line Replace
+!!                          # last command
+!*                          # all arguments of last command
+!^                          # first argument of last command
+!$                          # last argument of last command
+
+!?<cmd><tab>                # command and args of last <cmd>
+!?<cmd>?:*<tab>             # arguments of last <cmd>
+*(m0)                       # last modified
+*(m-4)                      # last modified < 4 days ago
+
+# Command Line
+cmd1 <(cmd2)                # treats cmd2 as fd and pipes into cmd1
+cmd1 =(cmd2)                # treats cmd2 as file and send as arg to cmd1
+cmd1 =cmd2                  # use the absolute path of /bin/cmd2 as arg for cmd1
+
+# Variables
+var='value'                 # variable
+arr=(item1 item2 item3)     # array
+${arr[@]}                   # list all elements: item1 item2 item3
+${arr[1]}                   # first element
+${#name}                    # number of characters or elements
+${~name}                    # treat value as pattern instead of text
+
+# Brace Expansion
+test{,2}                    # expands to test test2
+file<20->                   # expands to file20 file21 file22 ...
+text${^arr}full             # expands to textitem1full textitem2full ...
+
+# Parameter Expansion
+${-+=?}                     # without : only tests for unset, not null
+${name:-word}               # sub if unset
+${name:+word}               # sub if set
+${name:=word}               # sub and assign if not set, ::= always assign
+${name:?word}               # print word and exit if unset
+
+${name#pattern}             # remove pattern from the start, ## greedy
+${name%pattern}             # remove pattern from the end, %% greedy
+${name/pattern/repl}        # replace first occurrence of pattern, // all
+${name/#pattern/repl}       # replace matching from the start
+${name/%pattern/repl}       # replace matching from the end
+${name/#%pattern/repl}      # replace if matches whole string
+${name:/pattern/repl}       # replace value if pattern matches everything
+${name:#pattern}            # remove value if pattern matches, elem from arrary
+
+${name:|arrayname}          # remove elem or value matching elem from arrayname
+${name:*arrayname}          # remove non matching elem from arrayname
+${name:^arrayname}          # zip two arrays, :^^ longest
+
+$name[start,end]            # select a substring or elements from array
+${name:offset:lenght}       # same thing
+
+# Parameter Expansion Flags
+${(flags)name}              # include flags in any order (%%qa%q)
+${(%)name}                  # treat value of name as prompt expansion
+${(L)name}                  # lowercase, U uppercase, C capitalized
+${(u)name}                  # expand only the first occurrence of unique element
+${(M)name}                  # expand the matched portion for ${arr:#pattern}
+
+# Zstyle Module
+# https://unix.stackexchange.com/questions/214657/what-does-zstyle-do
+# http://zsh.sourceforge.net/Doc/Release/Zsh-Modules.html#The-zsh_002fzutil-Module
+
+# list all zstyle settings
+zstyle -L
+# store value in zstyle
+zstyle :example:favorites fruit apple
+# store multiple values in zstyle
+zstyle :example:list fruits banana mango pear
+# retrieve from zstyle and assign new $fav variable with -g
+zstyle -g fav ':example:favorites' fruit && echo $fav
+# retrieve from zstyle and be explicit about the assignment data type:
+# -a: array, -b: boolean, -s: string
+zstyle -a :example:list fruits myfruitlist && echo $myfruitlist
+# test that a zstyle value exists with -t
+if zstyle -t ':example:favorites' 'fruit' 'apple'; then
+  echo "an apple a day keeps the dr. away"
+fi
+if ! zstyle -t ':example:favorites:vegtable' 'broccoli' 'no'; then
+  echo "Broccoli is the deadliest plant on Earth - why, it tries to warn you itself with its terrible taste"
+fi
+# delete a value with -d
+zstyle -d ':example:favorites' 'fruit'
+# list only zstyle settings for a certain pattern
+zstyle -L ':example:favorites*'
+
+# ZLE Module - Widget
+function _do_something() {
+    zle widget
+    zle -U 'string input'
+    zle widget
+}
+zle -N _do_something
+# Call widget with bindkey
+bindkey '^O' _do_something
+# Or call widget with execute (ESC-x) (:) ()
+:execute: _     # type name
