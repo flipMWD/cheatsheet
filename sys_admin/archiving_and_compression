@@ -1,0 +1,31 @@
+#-------------------------------
+# Archiving and Compression
+#-------------------------------
+
+$ man tar
+
+> Archiving: Combining all directories and files into a single file
+> Compression: Reduce the size of files repeating the same pattern
+> Always archive from one directory above, avoiding multiple files to be
+extracted on the same directory of the tar.gz
+
+# Compression
+-z, --gzip (compress with decent size and system requirements)
+-J, --xz (better compression, more memory use, LZMA2 (same as 7zip))
+-j, --bzip2 (lower system requirements than xz, outdated)
+-a, --auto-compress (select from filename extension)
+-I, --use-compress-program=COMMAND (for something like rar)
+
+# Create Archive
+tar [-]c[z|J|...]vf filename.tar.gz /path/to/dir/
+-c, --create
+-v, --verbose
+-f, --file=ARCHIVE
+
+# Extract Archive
+tar [-]x[z|J|...]f filename.tar.gz
+-x, --extract
+
+# Avoid the tarbomb
+tar -czf ../tarbomb.tar.gz .
+tar -xzf tarbomb.tar.gz

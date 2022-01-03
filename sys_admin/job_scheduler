@@ -1,0 +1,110 @@
+#-----------------------------------
+# Cron - Job/Task Scheduler
+#-----------------------------------
+
+# Install
+pacman -S cronie
+systemctl enable [--now] cronie.service
+systemctl start cronie.service
+
+# Commands
+crontab -l                      # lists tasks
+crontab -e [-u $USER as root]   # edit new tasks
+crontab -r -i                   # remove, interactive
+
+# Tab Location
+ls /etc/cron.d/                 # programs tabs
+            .hourly
+            .daily
+            .weekly
+            .monthly
+            .deny               # blacklist
+            .allow              # whitelist
+
+cat /etc/crontab                # system wide
+cat /etc/anacrontab             # runs hourly, daily and monthly when sys up
+cat /var/spool/cron/$USER       # user tab
+
+# Field Definition
+ ┌──────────────────────────    minute (0-59)
+ │  ┌───────────────────────    hour (0-23)
+ │  │   ┌───────────────────    day of month (1-31)
+ │  │   │    ┌──────────────    month of the year (1-12) or jan, feb, ...
+ │  │   │    │    ┌─────────    day of the week (0-6, *sun=0|7) or sun, mon, ...
+ │  │   │    │    │     ┌───    optional user for global tab
+ │  │   │    │    │     │
+(m)(h)(dom)(moy)(dow)[(usr)]    (cmd)
+
+# Syntax (greedy, adds/OR with other rules)
+* = any
+3-5 = range (1=mon)
+1,2,10 = list separator
+/ = step value, ex: dom 1-10/2 = days 1 3 5 7 9
+~ = except
+
+@reboot = at startup
+@yearly = once a year (@annually)
+@monthly = once a month
+@weekly = once a week
+@daily = once a day (@midnight)
+@hourly = once a hour
+
+# Examples
+30 12 echo "Lunch Time every day! Can ommit other params."
+0 */2 * * * echo "Every two hours."
+*/15 9-17 * 1-5 echo "Every 15 minutes from 9:00 to 17:00 on weekdays"
+0 6 1,15 2-11 * echo "At 6:00 on 1st and 15th of Feb to Nov."
+@yearly echo "Happy New Year!"
+
+# Live Feedback - Check $(tty) and $(echo $DISPLAY)
+* * * * * /bin/echo "Message" > /dev/pts/0
+* * * * * env DISPLAY=:0 /usr/bin/graphical_program
+
+# Logging to File and Checking
+* * * * * /bin/echo "Message" >> /path/to/file
+tail -f[ollow] /path/to/file
+
+
+#-----------------------------------
+# AT - One-time Command Scheduler
+#-----------------------------------
+
+# Install
+pacman -S at
+systemctl enable [--now] atd
+
+# Commands (always executed by /bin/sh)
+cmd | at <time>                 # schedule command to be executed
+atq                             # lists pending jobs
+atrm <job-ID>                   # remove from pending jobs
+batch                           # executes multiple jobs when load is low
+
+# Options
+-t [[CC]YY]MMDDhhmm[.ss]        # exact datetime
+-f <script.sh>                  # reads file instead of STDIN
+-l, -rd, -b                     # aliases for atq, atrm, batch
+-v                              # show datetime for job to be executed
+-c <jobs-ID>                    # concatenate jobs to STDOUT
+-m, -M, -u <username>           # send mail, don't, specify user
+-q <a-zA-Z>                     # higher priority list: a > Z
+
+# Syntax (at [-x] <time> <date> + <increment>)
+HH:MM, HHMM with am pm          # time
+now, midnight, noon
+
+MMDD[CC]YY, MM/DD/[CC]YY        # date
+DD.MM.[CC]YY, [CC]YY-MM-DD
+today, tomorrow, *weekday*
+
++ <count> <time-unit>           # increment
+minutes, hours, days, weeks
+
+# Examples
+at sunday +10 minutes           # on next sunday, 10 min after current time
+at 1pm + 2 days                 # at 01:00, two days from now *(space after +)
+at 12:30 102120                 # at 12:30, on the day 2020-10-21
+
+# At Location
+/etc/at.allow                   # whitelist, blacklist users
+       .deny
+/var/spool/atd

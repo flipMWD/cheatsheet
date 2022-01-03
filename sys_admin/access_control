@@ -1,0 +1,49 @@
+#-------------------------------
+# Access Control
+#-------------------------------
+
+-rwxr-xr--                      # *nix permissions
+│└┬┘└┬┘└─┴───── other
+│ │  └───────── group
+│ └──────────── user
+└────────────── filetype
+
+chmod           777             # set permissions in 3 bits for each
+chown           owner:group     # change dir/filename owner
+
+id                              # lists current user uid, gid and groups
+
+useradd         -m              # create home directory
+                -d              # define location /home/user
+                -u              # UID
+                -g              # GID
+                -s              # shell path
+                username
+newusers        -               # adds users from file, colon separated lines
+passwd          user            # prompt new password for user
+
+userdel         user            # delete user
+
+groups          user            # check users in groups, also /etc/group
+groupadd        groupname       # create new group
+
+/ect/passwd                     # user details
+user:x:1000:978::/home/user:/bin/bash
+ │   │  │    │  │     │         └─ shell
+ │   │ UID  GID │     └─ directory
+ │   │          └─── GECOS: opt field for info purposes
+ │   └─ hashed passwords stored in /etc/shadow
+ └───── account
+
+daemon:x:992:992:Application Title:/var/lib/app:/usr/bin/nologin
+
+/etc/shadow
+user:$6$viXXoY14KzTEZV70$mgkuguxnWWcSBHdDiuGreSu6cj4rzUb2t4G5yS9/y9pmgKqm615tynywi/sqxLcJOBwNegBUGxwqNOVCdCI3N.:12125:0:99999:7:::
+ │    │    └──── date in days to expire, warn admin
+ │    └───────── hashed password
+ └────────────── account
+
+daemon:!!:12125::::::           # !! indicates it has no permission to login
+
+
+# vim:ts=16:sw=16:sts=16:et

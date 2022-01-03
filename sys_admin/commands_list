@@ -1,0 +1,384 @@
+#-----------------------------------------
+# List Of Commands With Brief Explanation
+#-----------------------------------------
+
+# User
+useradd <user>                  # create user, adduser is an alias
+-g[id] <group>                  # if ommited, create groupname as user
+-G <groups,>                    # include additional groups
+-m                              # create a dir for /home/user
+-s /shell/path
+
+usermod <user>
+-a                              # --append does not delete current groups
+-G <groups,>                    # add user to new groups
+
+id <user>                       # user's uid(name) gid(name)
+su <user>                       # run as substitute user
+who                             # show logged in users
+w                               # more info than who
+
+# Group
+groups <user>                   # groups of current user
+getent                          # get entries from databases
+| group <group>                 # list group:x:gid:users (cat /etc/group)
+
+groupadd <group>                # create new group
+gpasswd <group>
+-a <user>                       # add user to group
+-d <user>                       # delete user from group
+
+groupmod -n <new-g> <old-g>     # change group name, not gid
+groupdel <group>
+newgrp <group>                  # login to new group
+sg <group>                      # run as substitute group
+
+# File
+file <file>                     # show type of file
+-i                              # mime type
+
+xdg-mime
+| query <FILE|MIME>
+
+stat <file>                     # inode info of file
+
+chmod [u|g|o|a-+=r|w|x]|[octal] # change file permissions
+                                # u+s (setuid), g+s (setgid), +t (sticky bit)
+                                # viewed by ls as -rwsrwsrwt
+chown <user>:<group>
+chgrp <group>
+-R                              # for all above, change recursively
+
+getfacl <file>                  # view current ACL (Access Control Lists)
+setfacl [opt] [act/spec] <file> # set ACL for file or dir
+                                # specification in the form of user:permissions
+-d                              # apply to default ACL
+-m                              # modify action
+-x                              # remove action
+
+cut                             # cut input separated by \t or <Space>
+-d 'char'                       # define delimiter
+-f n,m                          # print listed fields
+-f-n                            # from start to n
+-fm-                            # from m to end
+
+tr <from> <to>                  # replaces a char, deletes if only one
+
+awk 'pat { act }' <file>
+-F <char>                       # set field separator
+-v <var>=<value>                # set variable
+
+gawk                            # gnu alternative to awk, with more functions
+| match()                       # args: input, pattern[, array]
+
+comm <file1> <file2>            # compare two sorted files, eg. <(sort <file>)
+-1|2|3                          # show lines only in file 1, 2 or both
+
+column
+-t                              # format output separated by whitespaces
+-s <char>                       # substitute whitespace for another char
+
+sort
+uniq                            # only print one of repeated lines
+tee                             # save STDIN to files and pipe it too
+script <file>                   # save terminal actions to file
+-T <log-time>                   # include --log-timing to replay session
+
+groff                           # create formated documents
+-m ms|mon                       # macro set
+| ms                            # ms for reports, letters, books and technical documents
+| mon                           # mon for document processing pdf and ps documents
+-K <encoding>
+-T <device>                     # specify format to be converted to (eg. pdf, ps, html)
+
+scriptreplay -s <file>          # replay typescripted session
+-t <log-time>
+
+less -R                         # pager, show raw control characters
+tar <target>                    # archiver and compacter, flags can be used without -
+-x                              # extract
+-c                              # create
+-v                              # verbose
+-f <archive_name>               # file
+-z                              # gzip compression
+-j                              # bzip2 compression
+-J                              # xz compression
+-D <dir>                        # cd to dir before executing
+
+unrar <target> [dir]            # rar utility
+| h                             # help
+| x                             # extract
+
+ffmpeg <output-file>
+-i "[concat:]<file>[|<file>]"   # input file
+-ab <n>k                        # bitrate
+-ar <n>                         # rate, eg. 44100
+-acodec [copy]                  # select or copy from input
+-vsync <n>                      # video options
+
+shnsplit <file.ext>             # split wav/flac/ape songs with cue files
+-f <input.cue>
+-t "%n %t"                      # track number and title
+-o <output-format>
+
+gpg                             # encryption tool
+
+# Explore
+which                           # searches path for binary
+whereis                         # search a broader range of sys directories
+whatis                          # description of a single command
+man [section] <command>
+-k                              # list man pages descriptions related to term
+
+apropos                         # same as man -k, descriptions of manuals
+info                            # display a command's info entry
+type                            # show weather it's a binary or builtin
+locate <file>                   # mlocate utility to find files
+updatedb                        # update database for mlocate
+ldconfig                        # link and cache shared libraries
+expect                          # interacts with other programs with a script
+head                            # print start of file
+-n<num>                         # set number of line, +<num> to offset from bot
+
+tail                            # print end of file
+-f                              # follow as the file is written to
+-n<num>                         # set number of line, +<num> to offset from top
+
+lsof                            # list open files by processes
+| /path/logfile
+-p                              # PID
+-u <user>                       # files opened by user
+-i <ip>[:port]                  # the flag alone lists all processes online
+
+history                         # show numbered list of commands
+| !!                            # last command
+| !^|$                          # first, last argument of last command
+| !*                            # all arguments from last command
+| ![-]<number>                  # history line number of command
+| !<desig>:s/<pat>/<repl>/      # replace pattern of designated command
+
+vifm                            # TUI file manager
+:com[mand]! <name> <cmd>        # create command, !rewrites
+:com                            # view user commands
+:comc[lear]                     # delete commands
+
+# System
+poweroff                        # turn off computer
+shutdown
+-h                              # halt
+-r                              # restart
++<num>                          # time in minutes
+
+systemctl
+| reboot
+| poweroff
+| start <service>
+| restart <service>
+| enable <service>              # start daemon service after reboot
+--now                           # enable option to also start the service
+
+journalctl                      # systemd journaling for daemon processes
+-r                              # reverse log
+-b [-1]                         # boot records only, or previous (-1), -2, ...
+-x                              # augment --catalog description of entries
+-e                              # jump to --pager-end
+-f                              # follow, keeps running the journal
+-u <unit>                       # track a specific service unit
+--vacuum-time|size              # remove old or large logs
+
+systemd-analyze
+| blame                         # lists all units in order they take to init
+
+chroot /mnt/point <shell>       # run command or shell with new root dir
+uname -a                        # operating system info
+lsb_release -a                  # disto info
+lsblk -f                        # show file system of all connected drives
+lsusb                           # show vendor info of connected USB devices
+lsmod                           # show status of modules in the kernel
+sysstat
+mpstat                          # processor info
+sensors                         # show devices temp and fan speed
+
+dmidecode                       # BIOS info and more
+-t <type>                       # such as bios, system, processor, memory, etc
+-q                              # less verbose
+
+chsh -s /path/shell             # change default shell
+-l                              # lists shells available (cat /etc/shells)
+
+top <|>                         # sort processes by different columns
+ps                              # list processes
+| aux                           # prints all process
+-au <user>                      # by user
+
+pidof <cmd>                     # print PID of command
+
+pkill <cmd>
+pgrep <cmd>
+-f                              # glob full cmd with args
+
+kill <PID>                      # send signal to process
+-l                              # list SIGNALS
+-<num> | <SIG>                  # SIG number or SIGNAL
+
+killall <cmd>
+-r                              # regex pattern
+
+nohup <cmd> [&]                 # catches HUP signal and sends cmd to 1 init
+
+# Filesystem
+dd
+| if=<input>                    # /dev/zero to clear drive
+| of=<output>
+| bs=<blocksize>K|M|G|T
+| status=progress
+
+df                              # file system disk space usage
+-i                              # inode information
+
+fdisk                           # format drive
+-l                              # list
+
+mkfs.<format> <device>          # make file system on /dev/sdXN
+wipefs                          # remote file system
+fsck.fat                        # check FAT (UEFI) drive, (from dosfstools)
+-V <device>                     # perform a verification pass, remove dirty bit
+-a <device>                     # auto repair file system
+
+mount <device> /mnt/point
+-l                              # list all mounted files
+
+umount <device>|/mnt/point      # un mount
+mkswap                          # swap device
+mkfifo                          # pipe/FIFO to be used between programs
+mknod                           # character, block or FIFO device
+mktemp                          # temporary file in /tmp
+
+# Network
+iptables                        # set firewall config (cat /etc/iptables/*)
+-L <chain>                      # --list all rules in chain, accepts modifiers
+-S <chain>                      # --list-rules, outputs same as iptables-save
+-n                              # --numeric format for IPs, instead of domain
+-t <table>                      # specifies table, filter by default
+-F                              # --flush all chains in current table
+-X                              # --delete-chain in current table
+-P <chain> <policy>             # set --policy as ACCEPT or DROP
+-N|A|I|R|D                      # --new, append, insert at, replace, delete rule
+--sport|dport                   # --source|destination-port from tcp|udp modules
+-m                              # --match module (eg. state, conntrack)
+--state                         # NEW, RELATED, ESTABLISHED, INVALID
+--ctstate                       # connection track module, superset of state
+--rsource                       # recent module (cat /proc/net/xt_recent/*)
+
+man iptables-extensions         # list all module options
+iptables-save -f <file.rules>   # after systemctl enable ip[6]tables.service
+iptables-restore <file.rules>
+
+ip <object>
+-4|6
+| addr [show dev lo|enpXsX]     # show info for specific device
+| neigh
+| link
+
+vnstat                          # monitor received and transfered packages
+-5|h|d|w|m|y                    # summary time frame
+-hg                             # hourly graph
+-l                              # live one second update
+| vnstati                       # generates image graphs, req gd
+-o <file>                       # output summary graph to file
+
+nmap <ip>[/mask][:port]         # ip: domain.tld, 123.45.6.789-800 (range)
+-A                              # all ports, OS recognition and traceroute
+-sL                             # list targets
+-sn                             # don't scan ports
+-Pn                             # skip host discovery
+-sS|A|F                         # scan SYN, ACK, FIN
+
+tshark                          # analyze network protocols
+-f <pattern>                    # filter for pattern such as TCP or UDP
+
+netstat                         # deprecated network analyzer
+-a                              # --all listening and non-listening sockets
+-l                              # --listening sockets only
+-n                              # --numeric addresses
+-r                              # kernel routing tables
+-p                              # show PID of --program
+-t|u                            # TCP, UDP
+
+ss                              # utility to investigate sockets
+mail <email>
+| -                             # STDIN becomes the message
+-s                              # subject
+
+curl                            # transfer data from or to server
+-o                              # ouput to file
+-L                              # follow http redirects
+
+ssh [<user>@]<server>           # connect to remote server
+ssh-keygen                      # create rsa key to avoid typing password
+ssh-copy-id <server>            # send public key to server
+
+tmux                            # terminal multiplexer
+| new -s <session-name>         # create named session
+| ls                            # list sessions
+| a[ttach] -t <session-name>
+| kill-session -t <session-name>
+| ^B                            # lead key
+d                               # detatch
+$                               # rename session
+s                               # show sessions
+c                               # create window
+0-9                             # switch to window number
+n|p                             # next and previous window
+"                               # split horizontally
+%                               # split vertically
+;                               # change split
+o                               # change to next pane
+[                               # select text
+]                               # paste selected
+
+screen                          # GNU terminal multiplexer
+-S                              # start named session
+-ls                             # list sessions
+-r|x <session-name>             # reattach to a screen session
+| ^A                            # lead key
+^A(x2)                          # last window
+^D|d                            # detach from current screen session
+c                               # create window
+^W                              # list windows as the title of the X window
+"                               # list windows
+*                               # list session connections
+A                               # rename session
+0-9                             # switch to screen window
+n|p                             # next or previous window
+k                               # kill
+S                               # split horizontally
+|                               # split vertically
+<Tab>                           # change split
+X                               # close pane
+Q                               # close all panes except current
+
+#-------------------------------
+# Distros
+#-------------------------------
+
+# Debian / Ubuntu
+dpkg -l                         # list all installed packages
+dpkg-query -S /path/to/file     # which pkg a file belongs to
+add-apt-repository ppa:<user>/<software>
+apt-get update                  # to include unverified, non-security related
+                                # software outside of repository
+
+# Redhat / Fedora
+dnf
+yam
+rpm
+-q                              # list installed package
+-qf /path/to/file               # which pkg a file belongs to
+
+# FreeBSD
+pkg install <pkg>
+pkg which /path/to/file         # which pkg a file belongs to
+
+
+# vim:sw=16:sts=16:et

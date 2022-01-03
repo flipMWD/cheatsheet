@@ -1,0 +1,165 @@
+#-------------------------------
+# TMUX
+#-------------------------------
+
+# General
+<C-b>   leader
+:       command line
+t       show time
+?       list all keybindings
+
+# Panes
+:setw synchronize-panes
+
+%       split vertically
+"       split horizontally
+<Spc>   alternate split
+;       toggle last active pane
+o       alternate focus
+q 0..9  select pane number
+<Arrow> switch to pane in that direction
+z       toogle fullwindow
+!       convert into window
+{       swap with prev pane
+}       swap with next pane
+m       mark panes
+M       clear selected panes
+x       close current pane
+>       popup options to split horiz|vert, swap panes and kill
+
+<C-Arrow>       resize pane
+<M-o>           rotate panes
+<M-1..5>        select panes presets
+
+# Windows
+tmux new -n window_name
+:join-pane [-hv] -s[ource] N -t[o] N            # joinp
+:swap-window -s[ource] N -t[o] N                # swapw
+c       create new window
+,       rename window
+.       move window
+i       display info on current window
+n       next window
+p       prev window
+0..9    select window number
+l       last window
+w       lists all windows
+f       search for text on open windows
+&       close current window
+<       popup options to swap, kill and spawn new
+
+<M-n>   next window with activity
+<M-p>   prev window with activity
+
+# Sessions
+tmux new -s session_name
+:new -s another_session_name
+tmux ls
+tmux kill-ses[sion] -t prev_session || -a[ll but last or -t]
+tmux a[ttach] -t prev_session
+
+s       show a list of all sessions
+$       rename session
+d       detach from session
+)       next session
+(       prev session
+
+# Copy Mode
+:setw -g mode-keys vi
+:show-buffer
+:list-buffers
+:choose-buffer
+
+[       enter copy mode
+q       leave mode
+<Spc>   start selection
+<Ent>   copy selection
+\#      list all paste buffers
+=       choose which buffer to paste
+-       delete most recent buffer
+]       paste content of buffer_0
+
+# Tmux Config
+# ~/.tmux.conf
+# alias set=set-option, -g[lobal], -a[ppend]
+set-option -g default-terminal "screen-256color"
+set -g mode-keys vi
+set -g status-style fg=white,bg=black
+set -g window-status-current-style fg=brightwhite,bg=brightblack
+
+
+#-------------------------------
+# Screen
+#-------------------------------
+
+# Sessions
+-S  <session-name>      start named session
+-ls                     list sessions
+-r|x <session-name>     reattach to a screen session
+-X <screen-cmd>         send command, use with -S <session-name>
+^D|d                    detach from current screen session
+*                       list session connections
+x                       lock
+\                       quit
+
+# General
+^A                      lead key
+^A(x2)                  last window
+a                       input ^A
+A                       rename window
+k                       kill
+:                       command
+?                       help
+[                       copy
+]                       paste
+>                       write paste buffer to tmp file
+<                       read tmp file to paste buffer
+
+# Windows
+c                       create window
+^W|w                    list windows as the title of the X window
+"                       list windows
+0-9                     switch to screen window
+n|p                     next or previous window
+:collapse               clear empty window number
+
+# Panes
+S                       split horizontally
+|                       split vertically
+<Tab>                   change split
+X                       close pane
+Q                       close all panes except current
+
+
+#-------------------------------
+# Abduco + DVTM
+#-------------------------------
+
+# Sessions
+abduco -c session_name dvtm
+abduco -l
+abduco -a session_name
+abduco [-e CTRL+\]              # default detachkey
+
+# General
+<C-g>   leader
+s       show status bar
+
+# Windows
+c       create window (dwm style)
+jk      focus down/up stack
+1..9    focus n window
+<Ent>   zoom stack window to master
+
+# Panes
+hl      resize master area
+f       tile vertical
+b       tile horizontal
+g       grid
+m       monocle
+
+# Workspaces
+v1..5
+
+
+# vim:sw=8:sts=8:et

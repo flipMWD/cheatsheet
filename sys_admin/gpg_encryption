@@ -1,0 +1,124 @@
+#-------------------------------
+# GPG Encryption
+#-------------------------------
+
+Encrypt with Public key so only Private can unlock.
+Encrypt with Private key, so anyone with Public key know you encrypted.
+
+Encrypt first with Public key of recipient, then with my Private key. The
+recipient may use my Public key to Decrypt the outter layer, knowing that I
+created the message because if the Public key works, then my Private key was
+used, then use their Private key to finally unlock the message.
+
+
+#-------------------------------
+# Creating
+#-------------------------------
+
+# Generating a Key Pair
+$ gpg --full-gen-key
+RSA, DSA, Elgamal (key type)
+1024 (low) <-> 4096 (high security)
+0 <-> 9999y (expiration)
+Name
+Email
+Comment
+
+
+#-------------------------------
+# Encrypting and Decrypting
+#-------------------------------
+
+# Encrypting a File
+gpg -e [--sign] -r contact@email.com filename
+Encrypts to the --recipient of identifiable email on gpg creation
+
+gpg -c filename
+Symmetric encryption using AES-128, or a different one with --cipher-algo.
+
+# Decrypting a File
+gpg -d filename.gpg > newfilename
+Decrypts the encrypted file to a new, or prints on screen
+
+gpg filename.gpg
+Decrypt symmetric encrypted file.
+
+
+#-------------------------------
+# Editing
+#-------------------------------
+
+# Change Email ID
+$ gpg --edit-key
+adduid
+Real Name (Comment) <username@email.com>
+(O)kay
+uid <new-ID>
+trust
+5                       # ultimate
+uid <old-ID>
+revuid
+Revoke? y
+4
+save
+
+# GPG Trust Keys after Importing
+gpg --edit-key <KEY-ID>
+gpg> trust
+gpg> 5
+gpg> quit
+
+# Renewing an expired key
+gpg --edit-key <KEY-ID>
+expire
+0 <-> 9999y
+key <SUB-KEY-NUM>
+expire
+0 <-> 9999y
+check                   # for signatures
+save
+quit
+
+
+#-------------------------------
+# Managing
+#-------------------------------
+
+# Moving Keys to another device
+gpg --export --armor contact@email.com > filename
+Exports the public key in ASCII format. May be uploaded to pgp.mit.edu.
+
+gpg --export-secret-key -a contact@email.com > filename
+Same thing for private keys, better done by | piping into a gpg -e.
+
+gpg --import filename
+Imports key in file to the keyring.
+
+# Checking Key IDs
+gpg --list-secret-keys
+Show all secret keys
+
+gpg -k --keyid-format long
+Shows the keyring, with long IDs.
+
+gpg --pinentry-mode cancel --list-packets filename.gpg
+Show short ID used on encryption, with other information. Does not require pw.
+
+# Send Public Key online
+gpg --list-keys --keyid-format long <KEY-ID>
+gpg --send-keys <KEY-ID>    # not email for this one, as there might be more
+
+# Searching for Keys online to Download
+gpg --search-keys <KEY-ID>
+gpg: data source: https://hkps.pool.sks-keyservers.net:443  # GPG default
+gpg --recv-keys <KEY-ID>    # to include pkey to keyring
+
+# Deleting Keys
+gpg --delete-keys <KEY-ID>
+gpg --delete-secret-keys <KEY-ID>
+
+# Allowing SSH access with GPG key
+ssh-copy-id user@domain.tld
+vim /etc/ssh/sshd_config
+/UsePAM                     # comment
+/PasswordAuth               # uncomment, no
