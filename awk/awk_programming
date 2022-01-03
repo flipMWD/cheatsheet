@@ -1,0 +1,216 @@
+#-------------------------------
+# AWK Programming Language
+# Alfred Aho, Peter Weinberger and Brian Kernighan (1977)
+#-------------------------------
+
+#-------------------------------
+# Synopsis
+#-------------------------------
+
+awk --options 'pattern { action }' <file>
+awk [-F sepstr] [-v assignment]... program | -f progfile [argument...]
+
+BEGIN   { statements }
+END     { statements }
+expr    { statements }
+/regex/ { statements }
+expr1, expr2    { statements }  # range pattern, matches from 1 to 2, inclusive
+
+
+#-------------------------------
+# Description
+#-------------------------------
+
+-F "?"  Input separator, blank spaces by default
+-v v=?  Assign a variable outside of BEGIN
+$0      Entire line
+$1      First field
+$2      Second field
+...
+$NF     Number of Fields, by default represents the last field of current record
+,       List multiple filds in print statement
+{}      Rule set of actions
+;       Allows multiple actions
+BEGIN   Executes before any text processing starts
+END     Executes after all processing has completed
+~       Match pattern
+!~      Non-match pattern
+str str Concatenation
+NR      The number of records processed, 0 insde BEGIN, n records inside END
+FS      Input field separator regex, which is space by default
+OFS     Print statement field separator
+RS      Input record separator, newline by default
+ORS     Output string to use between records, newline by default
+FNR     Ordinal number of current record of current file
+ENVIRON Allows the use of shell environmental variables
+
+
+#-------------------------------
+# Functions
+#-------------------------------
+
+Arithmetic
+sqrt(n)
+exp(n)
+cos(n)
+
+String
+toupper(s)
+match(s, pattern)
+split(s, arr[, fieldsep])
+
+User Defined
+function myfn() {}
+
+
+#-------------------------------
+# Script
+#-------------------------------
+
+#!/usr/bin/awk -f
+BEGIN {
+	# comments, set input field separator here, instead of -F as arg
+	FS=":"
+	OFS=" - "
+	accounts=0
+}
+{
+	# clear 2nd field, print whole line and increment counter
+	$2=""
+	print $0
+	accounts++
+}
+END {
+	# print counter
+	print accounts " accounts.\n"
+}
+
+
+#-------------------------------
+# Examples
+#-------------------------------
+
+{ print $1, $2 }                # fields 1 and 2 separated by space
+{ print $1 $2 }                 # concatenates fields 1 and 2
+NF > 4                          # every line with more than 4 fields
+$NF > 5                         # every line which the last field is greater than 5
+{ nf += NF } END { print nf }   # total number of fields
+
+{ last = $0 } END { print last }                # last reccord
+{ field = $NF } END { print field }             # last field of last line
+{ temp = $1; $1 = %2; %2 = temp; print }        # swap first two fields of every line
+
+who | awk '{print $1}'
+
+# Total number of lines containing pattern
+/pattern/ { nlines++ } END { print nlines }
+
+# Print fields in reverse order
+{ for(i = NF; i > 0; i--) printf("%s ", %i); printf("\n") }
+
+# Variables and printf formatting (% [left-align] [width] [.precision] type)
+{ h="#"; c=20; printf("%3s %-*s $%6.2f\n", h, c, $1, $2 * $3) }
+
+# Alternate colors of table
+awk 'NR % 2 == 0 { printf("\033[40m%s\033[0m\n", $0) }; NR % 2 != 0 { print }'
+
+# Print colums 1 and 3, concatenate with " MB", replace ':'
+free -m | grep : | awk '{print $1,$3 " MB"}' | sed 's/:/ Used =\t/g'
+
+# Execute command on file to print first, second and last columns of each line
+awk '{print $1,$2,$NF}' filename
+
+# Replace default output spaces with slashes
+date | awk 'OFS="/" {print $2,$3,$4}'
+
+# Prints begin message first, then the next print below
+who | awk 'BEGIN {print "Active Sessions"} {print $1,$4}'
+
+# Use colon as field separators instead of space
+awk -F: '{print $1,$6}' /etc/passwd
+
+# Executes only if the comparisson is true
+awk -F: '$3 >= 1000 {print $1,$6}' /etc/passwd
+
+# Everything between BEGIN {} and END {} is executed for each field
+# {} executes an action
+ls | awk 'BEGIN {print "Start"} head="/" {print head,$1,"\\"} END {print "Finish"}'
+
+# Use a pattern and only print fields on lines that match it,
+# equivalent to grep 'pattern' without the formatting
+awk '/^UUID/ {print $1,$2}' /etc/fstab
+
+# Define variables before first line
+# Ommited expression {}
+# Finally print the variables separated by a constant string
+# Receive null input, does not input records, only BEGIN and END work
+awk 'BEGIN {str="defining string variables"; num=42} END {print str " and the number " num}' < /dev/null
+
+# Loop columns and print from third to NF (special variable, last field)
+echo "c1 c2 c3 c4 c5" | awk '{for (i=3; i<=NF; ++i) print $i}'
+
+# Defines a variable outside of awk '' program
+bash_var=4
+awk -v number="$bash_var" 'END {print number}' < /dev/null
+
+# Strings two actions on the same action rule
+echo "Hello User" | awk '{$2 = "Admin"; print $0}'
+
+# List all non hidden files in $HOME, and print only the permissions and name
+ls -AlhN ~ | awk '$9 !~ /^\./ {print $1,$9}'
+
+# Concatenating with fields
+ls -AlhN ~ | grep Downl | awk '{print "Folder " $9 " has the following permissions " $1}'
+
+# Replace newline output between lines to spaces,
+# at the end, print the total number of lines processed
+ls -AlhN ~ | awk 'ORS=" " {print $9} END {print "\nTotal Records: " NR "\n"}'
+
+# Predefined column width, will ignore extra characters,
+# respects defined input field separators
+awk 'BEGIN {FIELDWIDTHS="3 4 3"} {print $1,$2,$3}' filename
+
+# Sets newlines to be field separators,
+# and empty blank lines to separate registers
+awk 'BEGIN {FS="\n"; RS=""} {print $1,$3}' filename
+
+# Using shell environmental variables without -v var="$VAR"
+awk 'BEGIN {print ENVIRON["TERM"]}'
+
+# Arg 0 is always the name of program, in this case awk
+awk 'BEGIN {print ARGC,ARGV[0]}' < /dev/null
+
+# Prints the number of the current record for current file
+awk 'BEGIN {FS=","} {print $1,"FNR="FNR}' filename filename
+
+# Conditionals, separating records with spaces, print value minus one
+echo "7 12 13 42 72" | awk 'BEGIN {RS=" "} {if ($1 > 30) print $1 + 1; else print $1 - 1}'
+
+# Print every tenth line of file
+awk '(NR % 10) == 0 {print $0}' filename
+
+# Select lines with pattern, like G23KDalk2 or Dgoas09, print last two columns
+awk '/(G|D)([[:digit:][:alpha:]]*)/ {print $(NF-1), $NF}'
+
+# Loops through all fields, find a field of numbers, and prints it
+# and its column number
+# -F or FS can be a regular expression with multiple separators
+echo "The year was 1962." | awk -F "[ .]" '{i=0; while (i<=NF) {if ($i~/^[0-9]+$/) printf "Found %c in the column %c.",$i,i; ++i}}'
+
+# Define a function with paramters
+awk 'function text(delim) {FS=delim; printf "The user %s\'s path is %s.\n", $1, $6} {text(":")}' /etc/passwd
+
+# Print only drives with more than 50% space used
+awk '{v=$5; sub(/%/, "", $5)}; int(v) >= 50 {print}'
+
+# Print when find a field that matches pattern
+awk '{ for (i = 1; $i !~ /pattern/; i++); print $i }'
+
+# Associative array where the key name is the whole line
+ps -A | awk 'Z[$0]++ {print $0}'
+
+# Print date header, and second and last fields for each record (line) in file
+awk -v date="$(date +'%d/%m/%Y')" 'BEGIN {print "Testing on", date, "\n==="}; {print $2, $NF}; END {print "===\nFINISHED"}' file.txt
+
+
+# vim:et:sw=16
