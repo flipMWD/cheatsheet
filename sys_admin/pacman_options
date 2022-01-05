@@ -1,0 +1,45 @@
+#-----------------------------
+# Pacman
+#-----------------------------
+
+# Sync
+-S          # sync package
+-Sy         # update package database
+-Su         # upgrade installed packages
+-Syu        # update pkg database and upgrade installed pkgs
+-Syy        # force update
+-Syyuw      # downlaod upgrades but leave uninstalled
+-Ss         # search remote packages
+-Si         # list info about remote pkg
+-Sc         # delete old version of pkg from cache, check with df -h
+
+# Query
+-Q          # installed localy
+-Qe         # explicitly installed
+-Qeq        # explicitly installed w/o version (quiet)
+-Qn         # installed from main repo
+-Qm         # installed from AUR
+-Qdt        # orphan dependencies
+-Ql         # list all files owned by package
+-Qo         # query which pakage own file argument
+-Qs         # search local package
+-Qi         # list info about local pkg
+-Q | wc -l  # word count of lines of a list of installed pkgs
+
+# Remove
+-R          # remove package
+-Rs         # remove pkg and unneeded dependencies
+-Rns        # remove pgk, depend. and system config files
+
+# Upgrade / Downgrade
+# From /var/cache/pacman/pkg/
+# In /etc/pacman.conf IgnorePkg = <pkg> to permanently keep that version
+-U <pkg>    # upgrades or downgrades from package-name.pkg.tar.zst
+
+#-----------------------------
+# /etc/pacman.conf
+#-----------------------------
+
+Color               # enables color
+CheckSpace          # provide checks if there's enough disk space
+VerbosePkgLists     # detailed list about pkgs
