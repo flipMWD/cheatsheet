@@ -240,6 +240,9 @@ fdisk                           # format drive
 -l                              # list
 
 mkfs.<format> <device>          # make file system on /dev/sdXN
+-L <label>
+-f                              # fast mode, do not zero
+
 wipefs                          # remote file system
 fsck.fat                        # check FAT (UEFI) drive, (from dosfstools)
 -V <device>                     # perform a verification pass, remove dirty bit
