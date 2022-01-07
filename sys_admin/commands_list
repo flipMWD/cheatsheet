@@ -162,6 +162,46 @@ vifm                            # TUI file manager
 :com                            # view user commands
 :comc[lear]                     # delete commands
 
+tmux                            # terminal multiplexer
+| new -s <session-name>         # create named session
+| ls                            # list sessions
+| a[ttach] -t <session-name>
+| kill-session -t <session-name>
+| ^B                            # lead key
+d                               # detatch
+$                               # rename session
+s                               # show sessions
+c                               # create window
+0-9                             # switch to window number
+n|p                             # next and previous window
+"                               # split horizontally
+%                               # split vertically
+;                               # change split
+o                               # change to next pane
+[                               # select text
+]                               # paste selected
+
+screen                          # GNU terminal multiplexer
+-S                              # start named session
+-ls                             # list sessions
+-r|x <session-name>             # reattach to a screen session
+| ^A                            # lead key
+^A(x2)                          # last window
+^D|d                            # detach from current screen session
+c                               # create window
+^W                              # list windows as the title of the X window
+"                               # list windows
+*                               # list session connections
+A                               # rename session
+0-9                             # switch to screen window
+n|p                             # next or previous window
+k                               # kill
+S                               # split horizontally
+|                               # split vertically
+<Tab>                           # change split
+X                               # close pane
+Q                               # close all panes except current
+
 # System
 poweroff                        # turn off computer
 shutdown
@@ -320,46 +360,6 @@ curl                            # transfer data from or to server
 ssh [<user>@]<server>           # connect to remote server
 ssh-keygen                      # create rsa key to avoid typing password
 ssh-copy-id <server>            # send public key to server
-
-tmux                            # terminal multiplexer
-| new -s <session-name>         # create named session
-| ls                            # list sessions
-| a[ttach] -t <session-name>
-| kill-session -t <session-name>
-| ^B                            # lead key
-d                               # detatch
-$                               # rename session
-s                               # show sessions
-c                               # create window
-0-9                             # switch to window number
-n|p                             # next and previous window
-"                               # split horizontally
-%                               # split vertically
-;                               # change split
-o                               # change to next pane
-[                               # select text
-]                               # paste selected
-
-screen                          # GNU terminal multiplexer
--S                              # start named session
--ls                             # list sessions
--r|x <session-name>             # reattach to a screen session
-| ^A                            # lead key
-^A(x2)                          # last window
-^D|d                            # detach from current screen session
-c                               # create window
-^W                              # list windows as the title of the X window
-"                               # list windows
-*                               # list session connections
-A                               # rename session
-0-9                             # switch to screen window
-n|p                             # next or previous window
-k                               # kill
-S                               # split horizontally
-|                               # split vertically
-<Tab>                           # change split
-X                               # close pane
-Q                               # close all panes except current
 
 #-------------------------------
 # Distros
