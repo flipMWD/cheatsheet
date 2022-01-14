@@ -1,0 +1,52 @@
+#-------------------------------
+# Vim - Termdebug Plugin
+#-------------------------------
+
+:h terminal-debug
+:packadd termdebug
+:Termdebug <executable>
+file <executable>                       # from gdb screen
+set args <arg1> <arg2>
+
+#-------------------------------
+# GNU Debugger (GDB)
+#-------------------------------
+
+gXX -g filename.cXX -o filename         # -g flag to create symbols
+
+b[reak] func || line    :Break          # create a breakpoint at start of fn or line
+del[ete] num            :Clear          # delete breakpoint
+info b                                  # print all breakpoints
+
+r[un] <args>            :Run            # start the program with optional arguments
+s[tep] in count         :Step           # step into function
+n[ext] over count       :Over           # step over function
+fin[ish] out            :Finish         # step out of function
+c[ontinue]              :Continue       # till the next breakpoint or end
+
+target record-full                      # records the steps, must use after run
+reverse-step                            # go back to previous steps
+reverse-next                            # same as above
+
+disp[lay] var                           # show var or exp at any iteration
+info variables                          # all global/static and locals
+info locals                             # just local variables
+info args                               # just the args passed to current function
+f[rame] num                             # print stack frame
+p[rint] exp || var      :Ev[aluate]     # can also modify values, eg. p index+99
+l[ine] num                              # print current or line number centered with [5] around
+set linesize num                        # change amount of context lines
+
+
+bt[backtrace] num || full               # list call stack upto, or with local vars
+where || info stack                     # same as above
+thread apply all bt                     # show backtrace for all threads
+disas[semble] frame /m                  # show assembly code for the current frame /mix
+layout src || asm || regs               # display assembly lines, or registers
+
+                        :Gdb            #
+                        :Program        # go to specific window
+                        :Source         #
+
+h[elp] topic
+q[uit]
