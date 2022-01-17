@@ -56,6 +56,10 @@ setfacl [opt] [act/spec] <file> # set ACL for file or dir
 -m                              # modify action
 -x                              # remove action
 
+ln <orig> <link>
+-s                              # soft link, hard link by default
+-r                              # relative path, absolute by default
+
 cut                             # cut input separated by \t or <Space>
 -d 'char'                       # define delimiter
 -f n,m                          # print listed fields
@@ -135,6 +139,19 @@ info                            # display a command's info entry
 type                            # show weather it's a binary or builtin
 locate <file>                   # mlocate utility to find files
 updatedb                        # update database for mlocate
+
+find <path> [<options>]
+-type f|d                       # file type
+-[i]name                        # search for name [case insensitive]
+-[m|c|a]time <days>
+-size [+|-]<size>[K|M|G]        # more or less than size
+-not -or -and <expr>,<expr>     # operators
+-path <path_pattern>            # exclude path
+-maxdepth <level>
+-delete
+-exec <cmd> {} \;|+             # execute command for each file found {}, where
+                                # \; individual, + all combined
+
 ldconfig                        # link and cache shared libraries
 expect                          # interacts with other programs with a script
 head                            # print start of file
