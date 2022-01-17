@@ -44,10 +44,10 @@ stat <file>                     # inode info of file
 
 chmod [u|g|o|a-+=r|w|x]|[octal] # change file permissions
                                 # u+s (setuid), g+s (setgid), +t (sticky bit)
-                                # viewed by ls as -rwsrwsrwt
+                                # viewed by ls as -rwsrwsrwt 
 chown <user>:<group>
-chgrp <group>
--R                              # for all above, change recursively
+chgrp <group>                   # change group ownership
+-R                              # for all chXXX above, change recursively
 
 getfacl <file>                  # view current ACL (Access Control Lists)
 setfacl [opt] [act/spec] <file> # set ACL for file or dir
@@ -67,6 +67,19 @@ cut                             # cut input separated by \t or <Space>
 -fm-                            # from m to end
 
 tr <from> <to>                  # replaces a char, deletes if only one
+-d                              # delete <from>
+-s                              # squeeze sequence of repeated <to> to one
+
+grep <pattern> [<file>]
+-c <num>                        # stop after count
+-i                              # case insensitive
+-n                              # print lines
+-C <num>                        # Center around num of lines, After, Before
+-v                              # invert
+
+rg <pattern>                    # recursive grep
+-c <num>                        # stop after count
+-C <num>                        # Center around num of lines, After, Before
 
 awk 'pat { act }' <file>
 -F <char>                       # set field separator
@@ -85,8 +98,10 @@ column
 sort
 uniq                            # only print one of repeated lines
 tee                             # save STDIN to files and pipe it too
-script <file>                   # save terminal actions to file
--T <log-time>                   # include --log-timing to replay session
+
+xargs <cmd2>                    # convert input to args for another command
+-0                              # each arg ends in null instead of whitespace
+-I <rplc_str>                   # replace the strings in <cmd2> with STDIN
 
 groff                           # create formated documents
 -m ms|mon                       # macro set
@@ -94,6 +109,9 @@ groff                           # create formated documents
 | mon                           # mon for document processing pdf and ps documents
 -K <encoding>
 -T <device>                     # specify format to be converted to (eg. pdf, ps, html)
+
+script <file>                   # save terminal actions to file
+-T <log-time>                   # include --log-timing to replay session
 
 scriptreplay -s <file>          # replay typescripted session
 -t <log-time>
@@ -136,7 +154,7 @@ man [section] <command>
 
 apropos                         # same as man -k, descriptions of manuals
 info                            # display a command's info entry
-type                            # show weather it's a binary or builtin
+type <cmd>                      # categorize if binary, built-in, func or alias
 locate <file>                   # mlocate utility to find files
 updatedb                        # update database for mlocate
 
@@ -173,6 +191,14 @@ history                         # show numbered list of commands
 | !*                            # all arguments from last command
 | ![-]<number>                  # history line number of command
 | !<desig>:s/<pat>/<repl>/      # replace pattern of designated command
+
+printenv [ENV_VARIABLE]         # print value
+env                             # print all environmental variables
+| ENV_VARIABLE=value <cmd>      # send var to child without setting to current
+-C <path>                       # change working dir to path
+-i                              # ignore environment, clear all env variables
+-u ENV_VARIABLE <cmd>           # remove variable
+-[*]-signal=SIG <cmd>           # block, ignore or default signals to cmd
 
 vifm                            # TUI file manager
 :com[mand]! <name> <cmd>        # create command, !rewrites
@@ -263,11 +289,13 @@ dmidecode                       # BIOS info and more
 chsh -s /path/shell             # change default shell
 -l                              # lists shells available (cat /etc/shells)
 
-top <|>                         # sort processes by different columns
 ps                              # list processes
-| aux                           # prints all process
--au <user>                      # by user
+-a                              # all users
+-u <user>
+-x                              # not initiated by user
+-w[w]                           # wide output
 
+top <|>                         # sort processes by different columns
 pidof <cmd>                     # print PID of command
 
 pkill <cmd>
