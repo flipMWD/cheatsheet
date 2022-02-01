@@ -260,6 +260,10 @@ systemctl
 | enable <service>              # start daemon service after reboot
 --now                           # enable option to also start the service
 
+[rc-]service <service>          # openrc for debian/ubuntu distros
+| reload
+| restart
+
 journalctl                      # systemd journaling for daemon processes
 -r                              # reverse log
 -b [-1]                         # boot records only, or previous (-1), -2, ...
@@ -368,6 +372,19 @@ ip <object>
 | neigh
 | link
 
+ssh-keygen                      # create key to avoid typing password
+-t <encryption>                 # choose encryption
+-A                              # generate all missing key types
+
+ssh [<user>@]<host> [<cmd>]     # connect to remote server
+| /etc/ssh/sshd_config          # check PubkeyAuthentication, PermitRootLogin
+| scp ~/.ssh/id_<encryption>.pub [scp://]<user>@<host>:[port/]<path>/authorized_keys
+
+ssh-copy-id [<user>@]<host>     # send public key to server
+-p <port>
+-i <id_file.pub>
+-s                              # pull ~/.ssh/authorized_keys and return updated
+
 vnstat                          # monitor received and transfered packages
 -5|h|d|w|m|y                    # summary time frame
 -hg                             # hourly graph
@@ -401,10 +418,6 @@ mail <email>
 curl                            # transfer data from or to server
 -o                              # ouput to file
 -L                              # follow http redirects
-
-ssh [<user>@]<server>           # connect to remote server
-ssh-keygen                      # create rsa key to avoid typing password
-ssh-copy-id <server>            # send public key to server
 
 #-------------------------------
 # Distros
