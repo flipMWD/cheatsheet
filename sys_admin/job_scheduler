@@ -66,6 +66,70 @@ tail -f[ollow] /path/to/file
 
 
 #-----------------------------------
+# Systemd Timers
+#-----------------------------------
+
+Separate schedule as unit timers and commands as unit services.
+
+# /etc/systemd/<sub-category>/<unit>.service
+[Unit]
+Description=<description>
+
+[Service]
+ExecStart=<command>
+
+# /etc/systemd/<sub-category>/<unit>.timer
+[Unit]
+Description=<description>
+
+[Timer]
+OnBootSec=<delay-after-boot>
+OnCalendar=<schedule>
+Unit=<unit>.service
+
+[Install]
+WantedBy=multi-user.target
+
+# Schedule (man systemd.time /CALENDAR EVENTS)
+last Fridays → Fri *-*~07/1 00:00:00
+    minutely →     *-*-* *:*:00
+      hourly →     *-*-* *:00:00
+       daily →     *-*-* 00:00:00
+     monthly →     *-*-01 00:00:00
+      weekly → Mon *-*-* 00:00:00
+      yearly →     *-01-01 00:00:00
+   quarterly →     *-01,04,07,10-01 00:00:00
+semiannually →     *-01,07-01 00:00:00
+                │  │   │    │  │  │  │
+                │  │   │    │  │  │  └────── second
+                │  │   │    │  │  └───────── minute
+                │  │   │    │  └──────────── hour
+                │  │   │    └─────────────── day
+                │  │   └──────────────────── month
+                │  └──────────────────────── year
+                └─────────────────────────── weekday (optional)
+
+# Syntax
+*           = any
+Mon..Fri    = range
+1,2,10      = list
+/           = step (eg. 02/2 = 02,04,06,08,...)
+~           = last days of month
+
+# Check Schedule
+systemd-analyze calendar "*:*:0/30"
+
+# Update Timers
+systemctl daemon-reload
+
+systemctl start <unit>.timer
+systemctl enable <unit>.timer
+systemctl status <unit>.timer
+
+journalctl -fu <unit>.service
+
+
+#-----------------------------------
 # AT - One-time Command Scheduler
 #-----------------------------------
 
