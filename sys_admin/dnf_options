@@ -1,0 +1,43 @@
+#-------------------------------
+# DNF
+#-------------------------------
+
+# Remote
+search          # find packages
+info
+install
+upgrade         # all, or choose specific package
+update          # yum deprecated, alias to upgrade
+check-update
+deplist         # deprecated, list dependencies from package
+
+# Local
+list installed
+remove          # choose package to remove
+autoremove      # unneeded packages installed as dependencies
+history
+
+# Group
+group           # package groups
+  > list
+  > info
+  > install
+
+# Repository
+repolist 
+  > all         # all repos available
+  > enabled     # list all repositories enabled
+repoquery | rq
+  > --installed # check only installed packages
+  > --deplist   # replace deprecated deplist, list dependencies from package
+  > --file      # check package owner of file
+  > --list      # file list of the package
+
+# Management
+check           # check for proplems with the package database
+clean           # clear cached data
+config-manager  # from dnf install dnf-plugins-core
+  > --add-repo  # add third party repos
+
+
+# vim:et:sw=16
