@@ -366,11 +366,13 @@ man iptables-extensions         # list all module options
 iptables-save -f <file.rules>   # after systemctl enable ip[6]tables.service
 iptables-restore <file.rules>
 
-ip <object>
+ip [<options>] <object> [<cmd>]
 -4|6
-| addr [show dev lo|enpXsX]     # show info for specific device
-| neigh
-| link
+-s                              # statistics, double for errors
+| a[ddress]                     # protocol addresses
+| l[ink]                        # network interfaces
+| r[oute]                       # routing table
+| n[eighbor]                    # neighbor objects (ARP table)
 
 ssh-keygen                      # create key to avoid typing password
 -t <encryption>                 # choose encryption
