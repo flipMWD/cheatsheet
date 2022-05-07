@@ -40,4 +40,21 @@ config-manager  # from dnf install dnf-plugins-core
   > --add-repo  # add third party repos
 
 
+#-------------------------------
+# RPM
+#-------------------------------
+
+-i | --install  # install
+-e | --erase    # remove
+
+-q | --query    # verify packages
+  > -a | --all  # all installed packages
+
+#-------------------------------
+# YUM (Deprecated)
+#-------------------------------
+
+# Different from DNF
+
+
 # vim:et:sw=16
