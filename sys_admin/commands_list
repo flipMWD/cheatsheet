@@ -5,6 +5,7 @@
 # User
 useradd <user>                  # create user, adduser is an alias
 -g[id] <group>                  # if ommited, create groupname as user
+-a                              # append to supplementary groups instead of replacing
 -G <groups,>                    # include additional groups
 -m                              # create a dir for /home/user
 -s /shell/path
@@ -155,6 +156,9 @@ man [section] <command>
 apropos                         # same as man -k, descriptions of manuals
 info                            # display a command's info entry
 type <cmd>                      # categorize if binary, built-in, func or alias
+-t                              # only the keyword, sentence
+-a                              # all infor about it
+
 locate <file>                   # mlocate utility to find files
 updatedb                        # update database for mlocate
 
