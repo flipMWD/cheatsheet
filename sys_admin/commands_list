@@ -121,12 +121,31 @@ less -R                         # pager, show raw control characters
 tar <target>                    # archiver and compacter, flags can be used without -
 -x                              # extract
 -c                              # create
+-r                              # append new files
+-u                              # update archive appending newer versions
+-t                              # list contents
 -v                              # verbose
 -f <archive_name>               # file
 -z                              # gzip compression
 -j                              # bzip2 compression
 -J                              # xz compression
 -D <dir>                        # cd to dir before executing
+
+gzip <targets>
+gunzip
+bzip2
+bunzip2
+-d                              # decompress
+-c                              # to STDOUT
+
+zip <file[.zip]> <target>
+-r                              # recursive
+-@                              # from STDIN
+
+unzip
+-l                              # list content
+-q                              # quiet
+-d <dir>                        # to another directory
 
 unrar <target> [dir]            # rar utility
 | h                             # help
@@ -163,11 +182,13 @@ locate <file>                   # mlocate utility to find files
 updatedb                        # update database for mlocate
 
 find <path> [<options>]
--type f|d                       # file type
--[i]name                        # search for name [case insensitive]
--[m|c|a]time <days>
--size [+|-]<size>[K|M|G]        # more or less than size
--not -or -and <expr>,<expr>     # operators
+-type f|d|l                     # file type
+-[i]name "*glob?[a-z]"          # search for name [case insensitive]
+-[m|c|a]time [+|-]<days>        # m=content, c=metadata, a=read
+-size [+|-]<size>[k|M|G]        # more, less or exactly <size>
+-user <user>                    # owned by user
+-group <group>                  # owned by group
+-not|! -or|o -and|a <epr>,<expr># operators
 -path <path_pattern>            # exclude path
 -maxdepth <level>
 -delete
