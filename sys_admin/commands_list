@@ -62,10 +62,16 @@ ln <orig> <link>
 -r                              # relative path, absolute by default
 
 cut                             # cut input separated by \t or <Space>
+-c <1,2,3|1-3>                  # character position list
 -d 'char'                       # define delimiter
 -f n,m                          # print listed fields
 -f-n                            # from start to n
 -fm-                            # from m to end
+--output-delimiter 'char'
+
+paste <files>                   # concatenate lines of each file side by side
+-d 'chars'                      # choose delimiter different than <Tab>
+-s                              # transpose ouput
 
 tr <from> <to>                  # replaces a char, deletes if only one
 -d                              # delete <from>
@@ -74,9 +80,13 @@ tr <from> <to>                  # replaces a char, deletes if only one
 grep <pattern> [<file>]
 -c <num>                        # stop after count
 -i                              # case insensitive
--n                              # print lines
--C <num>                        # Center around num of lines, After, Before
+-e                              # regex
+-E                              # extended regex
 -v                              # invert
+-n                              # print lines
+-l                              # list files where pattern was found
+-r                              # recursive
+-C <num>                        # Center around num of lines, After, Before
 
 rg <pattern>                    # recursive grep
 -c <num>                        # stop after count
@@ -96,7 +106,13 @@ column
 -t                              # format output separated by whitespaces
 -s <char>                       # substitute whitespace for another char
 
-sort
+sort                            # sort (ASCII > LC_ALL > LC_COLLATE > LANG)
+-u                              # remove repeated lines
+-k <field>                      # key/field to be used for sorting
+-t 'char'                       # separator
+-r                              # reverse
+-o <file                        # output to file
+
 uniq                            # only print one of repeated lines
 tee                             # save STDIN to files and pipe it too
 
@@ -318,9 +334,11 @@ dmidecode                       # BIOS info and more
 chsh -s /path/shell             # change default shell
 -l                              # lists shells available (cat /etc/shells)
 
-ps                              # list processes
+ps [<PID>]                      # list processes
+-e                              # every process
 -a                              # all users
 -u <user>
+-f                              # formated list
 -x                              # not initiated by user
 -w[w]                           # wide output
 
