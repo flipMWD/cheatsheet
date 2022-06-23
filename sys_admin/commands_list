@@ -7,15 +7,24 @@ useradd <user>                  # create user, adduser is an alias
 -g[id] <group>                  # if ommited, create groupname as user
 -a                              # append to supplementary groups instead of replacing
 -G <groups,>                    # include additional groups
--m                              # create a dir for /home/user
+-m                              # create a dir for /home/user based on /etc/skel
 -s /shell/path
 
 usermod <user>
 -a                              # --append does not delete current groups
 -G <groups,>                    # add user to new groups
 
-id <user>                       # user's uid(name) gid(name)
+userdel <user>                  # delete user
+-r                              # remove home dir
+
+passwd [<user>]                 # define password for current or specific user
 su <user>                       # run as substitute user
+id <user>                       # user's uid(name) gid(name)
+-n                              # name
+-u                              # only user
+-g                              # only main group
+-G                              # all groups
+
 who                             # show logged in users
 w                               # more info than who
 
