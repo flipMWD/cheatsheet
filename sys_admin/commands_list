@@ -343,6 +343,7 @@ dmidecode                       # BIOS info and more
 chsh -s /path/shell             # change default shell
 -l                              # lists shells available (cat /etc/shells)
 
+pstree
 ps [<PID>]                      # list processes
 -e                              # every process
 -a                              # all users
@@ -365,7 +366,15 @@ kill <PID>                      # send signal to process
 killall <cmd>
 -r                              # regex pattern
 
-nohup <cmd> [&]                 # catches HUP signal and sends cmd to 1 init
+jobs
+| %<n>                          # select shell job number
+| fg [<n>]
+| bg [<n>]
+
+<cmd> &                         # connected to shell and terminal (listed by jobs)
+disown [<cmd>]                  # remove bg proc from shell`s job list, attached to term
+nohup <cmd> [&]                 # separates process from term,
+                                # catches HUP signal and sends cmd to 1 init
 
 # Filesystem
 dd
